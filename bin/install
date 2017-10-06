@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+set -e
+set -o pipefail
+
+ASDF_INSTALL_TYPE=${ASDF_INSTALL_TYPE:-version  }
+TMPDIR=${TMPDIR:-/tmp}
+[ -n "$ASDF_INSTALL_VERSION" ] || (>&2 echo 'Missing ASDF_INSTALL_VERSION' && exit 1)
+[ -n "$ASDF_INSTALL_PATH" ] || (>&2 echo 'Missing ASDF_INSTALL_PATH' && exit 1)
+
+install_kubectl() {
+  local install_type=$1
+  local version=$2
+  local install_path=$3
+  local bin_install_path="$install_path/bin"
+  local download_url="$(get_download_url $version)"
+
+  mkdir -p "${bin_install_path}"
+
+  local bin_path="${bin_install_path}/kubectl"
+  echo "Downloading kubectl from ${download_url}"
+  curl -s "$download_url" -o "$bin_path"
+  chmod +x $bin_path
+}
+
+get_arch() {
+  uname | tr '[:upper:]' '[:lower:]'
+}
+
+get_download_url() {
+  local version="$1"
+  local platform="$(get_arch)"
+  echo "https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/${platform}/amd64/kubectl"
+}
+
+install_kubectl $ASDF_INSTALL_TYPE $ASDF_INSTALL_VERSION $ASDF_INSTALL_PATH
