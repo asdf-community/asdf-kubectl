@@ -6,7 +6,7 @@ script:
   - ./bin/list-all
   - asdf plugin-add kubectl ./
   - asdf list-all kubectl
-  - asdf plugin-test kubectl ./
+  - asdf plugin-test kubectl ./ 'kubectl version --client'
 os:
   - linux
   - osx
