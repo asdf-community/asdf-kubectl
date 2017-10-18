@@ -1,4 +1,5 @@
-#!/usr/bin/env bash
+#!/usr/bin/env bash -x
+
 
 releases_path=https://api.github.com/repos/kubernetes/kubernetes/releases
 cmd="curl -s"
