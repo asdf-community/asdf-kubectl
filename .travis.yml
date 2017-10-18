@@ -3,10 +3,8 @@ before_script:
   - git clone https://github.com/asdf-vm/asdf.git
   - . asdf/asdf.sh
 script:
-  - ./bin/list-all
   - asdf plugin-add kubectl ./
-  - asdf list-all kubectl
-  - asdf plugin-test kubectl ./ 'kubectl version --client'
+  - asdf plugin-test kubectl ./
 os:
   - linux
   - osx
