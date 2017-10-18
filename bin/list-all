@@ -1,4 +1,6 @@
-#!/usr/bin/env bash -x
+#!/usr/bin/env bash
+
+set -x
 
 
 releases_path=https://api.github.com/repos/kubernetes/kubernetes/releases
