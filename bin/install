@@ -19,8 +19,11 @@ install_kubectl() {
 
   local bin_path="${bin_install_path}/kubectl"
   echo "Downloading kubectl from ${download_url}"
-  curl -s "$download_url" -o "$bin_path"
-  chmod +x $bin_path
+  if curl -fs "$download_url" -o "$bin_path"; then
+    chmod +x $bin_path
+  else
+    exit 1
+  fi
 }
 
 get_arch() {
