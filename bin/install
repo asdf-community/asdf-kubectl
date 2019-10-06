@@ -18,7 +18,7 @@ install_kubectl() {
 
   local bin_path="${bin_install_path}/kubectl"
   echo "Downloading kubectl from ${download_url}"
-  if curl -fs "$download_url" -o "$bin_path"; then
+  if curl -s "$download_url" -o "$bin_path"; then
     chmod +x $bin_path
   else
     exit 1
