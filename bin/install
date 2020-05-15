@@ -3,6 +3,10 @@
 set -e
 set -o pipefail
 
+if [ -n "${DEBUG}" ]; then
+  set -x
+fi
+
 ASDF_INSTALL_TYPE=${ASDF_INSTALL_TYPE:-version  }
 TMPDIR=${TMPDIR:-/tmp}
 [ -n "$ASDF_INSTALL_VERSION" ] || (>&2 echo 'Missing ASDF_INSTALL_VERSION' && exit 1)
@@ -13,14 +17,17 @@ install_kube_release() {
   local install_type="$2"
   local version="$3"
   local install_path="$4"
-  local bin_install_path="$install_path/bin"
-  local download_url="$(get_download_url $kube_release_name $version)"
 
+  local bin_install_path="$install_path/bin"
   mkdir -p "${bin_install_path}"
+
+  local platform="$(get_arch)"
+
+  local download_url="$(get_download_url $kube_release_name $version $platform)"
 
   local bin_path="${bin_install_path}/${kube_release_name}"
   echo "Downloading ${kube_release_name} from ${download_url}"
-  curl -s "$download_url" -o "$bin_path"
+  download "$download_url" "$bin_path"
   chmod +x "$bin_path"
 }
 
@@ -28,14 +35,46 @@ get_arch() {
   uname | tr '[:upper:]' '[:lower:]'
 }
 
+get_stable_version_number() {
+  local curl_cmd="$(command -vp curl)"
+  echo "$($curl_cmd -fsS https://storage.googleapis.com/kubernetes-release/release/stable.txt | tr -d v)"
+}
+
 get_download_url() {
   local kube_release_name="$1"
   local version="$2"
-  local platform="$(get_arch)"
+  local platform="$3"
   echo "https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/${platform}/amd64/${kube_release_name}"
 }
 
-for release_item in "kubeadm" "kubectl" "kubelet"
-do
-  install_kube_release "${release_item}" $ASDF_INSTALL_TYPE $ASDF_INSTALL_VERSION $ASDF_INSTALL_PATH
-done
+download() {
+  local download_url="${1}"
+  local output_path="${2}"
+  local curl_cmd="$(command -vp curl)"
+  $($curl_cmd -fsS "$download_url" -o "$output_path")
+}
+
+platform="$(get_arch)"
+
+if [ "${platform}" = 'darwin' ]; then
+  echo "this is not available on ${platform}"
+else
+  if [ "$ASDF_INSTALL_VERSION" = "stable" ]; then
+      rm -rf "${ASDF_INSTALL_PATH}"
+      actual_version="$(get_stable_version_number)"
+      actual_version_path="$(dirname $ASDF_INSTALL_PATH)/${actual_version}"
+      mkdir -p "${actual_version_path}"
+      ln -s "${actual_version_path}" "${ASDF_INSTALL_PATH}"
+  else
+      actual_version="${ASDF_INSTALL_VERSION}"
+  fi
+
+  for release_item in "kubeadm" "kubectl" "kubelet"
+  do
+    install_kube_release "${release_item}" $ASDF_INSTALL_TYPE $actual_version $ASDF_INSTALL_PATH
+  done
+fi
+
+if [ -n "${DEBUG}" ]; then
+  set +x
+fi

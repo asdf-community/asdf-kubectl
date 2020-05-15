@@ -1,15 +1,19 @@
 #!/usr/bin/env bash
+set -Eeuo pipefail
 
-if [ ! -z "${DEBUG}" ]; then
+DEBUG="${DEBUG:-}"
+GITHUB_API_TOKEN="${GITHUB_API_TOKEN:-}"
+
+if [ -n "${DEBUG}" ]; then
   set -x
 fi
 
 releases_path=https://api.github.com/repos/kubernetes/kubernetes/releases
-cmd="curl -s"
-if [ -n "$OAUTH_TOKEN" ]; then
-  cmd="$cmd -H 'Authorization: token $OAUTH_TOKEN'"
+curl_cmd="$(command -vp curl)"
+cmd="${curl_cmd} -fsS"
+if [ -n "$GITHUB_API_TOKEN" ]; then
+  cmd="$cmd -H 'Authorization: token $GITHUB_API_TOKEN'"
 fi
-cmd="$cmd $releases_path"
 
 # stolen from https://github.com/rbenv/ruby-build/pull/631/files#diff-fdcfb8a18714b33b07529b7d02b54f1dR942
 function sort_versions() {
@@ -18,10 +22,12 @@ function sort_versions() {
 }
 
 # Fetch all tag names, and get only second column. Then remove all unnecesary characters.
-raw_versions="$(eval $cmd)"
+raw_versions="$(eval $cmd $releases_path)"
 greped_versions=$(echo "${raw_versions}" | grep -oE "tag_name\": *\".{1,15}\",")
 unsorted_versions=$(echo "${greped_versions}" | sed 's/tag_name\": *\"v//;s/\",//')
-versions="$(echo $unsorted_versions | sort_versions)"
+versions=$(echo "$unsorted_versions" | sort_versions)
+stable_version="$($cmd https://storage.googleapis.com/kubernetes-release/release/stable.txt | tr -d v)"
+printf "stable(${stable_version}) "
 echo $versions
 
 if [ ! -z "${DEBUG}" ]; then

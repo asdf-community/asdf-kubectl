@@ -1,9 +1,0 @@
-language: c
-script:
-  - DEBUG=1 asdf plugin-test kube-release https://github.com/jtzero/asdf-kube-release.git --asdf-plugin-gitref $TRAVIS_BRANCH
-before_script:
-  - git clone https://github.com/asdf-vm/asdf.git
-  - . asdf/asdf.sh
-os:
-  - linux
-  - osx
