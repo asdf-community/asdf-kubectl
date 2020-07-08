@@ -44,7 +44,8 @@ get_download_url() {
   local kube_release_name="$1"
   local version="$2"
   local platform="$3"
-  echo "https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/${platform}/amd64/${kube_release_name}"
+
+  echo "https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/${platform}/$(get_cpu)/${kube_release_name}"
 }
 
 download() {
@@ -52,6 +53,20 @@ download() {
   local output_path="${2}"
   local curl_cmd="$(command -vp curl)"
   $($curl_cmd -fsS "$download_url" -o "$output_path")
+}
+
+get_cpu() {
+  local machine_hardware_name
+  machine_hardware_name="$(uname -m)"
+
+  case "$machine_hardware_name" in
+    'x86_64') local cpu_type="amd64";;
+    'powerpc64le') local cpu_type="ppc64le";;
+    'aarch64') local cpu_type="arm64";;
+    *) local cpu_type="$machine_hardware_name";;
+  esac
+
+  echo "$cpu_type"
 }
 
 platform="$(get_arch)"
