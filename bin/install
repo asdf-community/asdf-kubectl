@@ -27,10 +27,24 @@ get_arch() {
   uname | tr '[:upper:]' '[:lower:]'
 }
 
+get_cpu() {
+  local machine_hardware_name
+  machine_hardware_name="$(uname -m)"
+
+  case "$machine_hardware_name" in
+    'x86_64') local cpu_type="amd64";;
+    'powerpc64le') local cpu_type="ppc64le";;    
+    'aarch64') local cpu_type="arm64";;
+    *) local cpu_type="$machine_hardware_name";;
+  esac
+
+  echo "$cpu_type"
+}
+
 get_download_url() {
   local version="$1"
   local platform="$(get_arch)"
-  echo "https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/${platform}/amd64/kubectl"
+  echo "https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/${platform}/${get_cpu}/kubectl"
 }
 
 install_kubectl $ASDF_INSTALL_TYPE $ASDF_INSTALL_VERSION $ASDF_INSTALL_PATH
