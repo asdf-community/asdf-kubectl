@@ -44,7 +44,8 @@ get_cpu() {
 get_download_url() {
   local version="$1"
   local platform="$(get_arch)"
-  echo "https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/${platform}/${get_cpu}/kubectl"
+  local cpu="$(get_cpu)"
+  echo "https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/${platform}/$(cpu)/kubectl"
 }
 
 install_kubectl $ASDF_INSTALL_TYPE $ASDF_INSTALL_VERSION $ASDF_INSTALL_PATH
