@@ -12,4 +12,4 @@ asdf plugin-add kube-release https://github.com/jtzero/asdf-kube-release.git
 
 ## Use
 
-Check out the [asdf](https://github.com/asdf-vm/asdf) readme for instructions on how to install and manage asdf plugin versions
+Check out the [asdf documentation](https://asdf-vm.com/#/core-manage-versions?id=install-version) for instructions on how to install and manage versions.

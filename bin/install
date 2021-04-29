@@ -8,7 +8,6 @@ if [ -n "${DEBUG}" ]; then
 fi
 
 ASDF_INSTALL_TYPE=${ASDF_INSTALL_TYPE:-version  }
-TMPDIR=${TMPDIR:-/tmp}
 [ -n "$ASDF_INSTALL_VERSION" ] || (>&2 echo 'Missing ASDF_INSTALL_VERSION' && exit 1)
 [ -n "$ASDF_INSTALL_PATH" ] || (>&2 echo 'Missing ASDF_INSTALL_PATH' && exit 1)
 
@@ -27,8 +26,11 @@ install_kube_release() {
 
   local bin_path="${bin_install_path}/${kube_release_name}"
   echo "Downloading ${kube_release_name} from ${download_url}"
-  download "$download_url" "$bin_path"
-  chmod +x "$bin_path"
+  if download "$download_url" "$bin_path"; then
+    chmod +x $bin_path
+  else
+    exit 1
+  fi
 }
 
 get_arch() {
