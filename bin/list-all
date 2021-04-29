@@ -8,6 +8,13 @@ if [ -n "${DEBUG}" ]; then
   set -x
 fi
 
+fail() {
+  echo -e "asdf-$TOOL_NAME: $*"
+  exit 1
+}
+
+curl_opts=(-fsSL)
+
 releases_path=https://api.github.com/repos/kubernetes/kubernetes/releases
 curl_cmd="$(command -vp curl)"
 cmd="${curl_cmd} -fsS"
@@ -16,7 +23,7 @@ if [ -n "$GITHUB_API_TOKEN" ]; then
 fi
 
 # stolen from https://github.com/rbenv/ruby-build/pull/631/files#diff-fdcfb8a18714b33b07529b7d02b54f1dR942
-function sort_versions() {
+sort_versions() {
   sed 'h; s/[+-]/./g; s/.p\([[:digit:]]\)/.z\1/; s/$/.z/; G; s/\n/ /' | \
     LC_ALL=C sort -t. -k 1,1 -k 2,2n -k 3,3n -k 4,4n -k 5,5n | awk '{print $2}'
 }
