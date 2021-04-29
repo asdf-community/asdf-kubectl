@@ -4,7 +4,7 @@ set \
   -o pipefail \
   -o errexit
 
-releases_path=https://api.github.com/repos/kubernetes/kubernetes/releases
+releases_path="https://api.github.com/repos/kubernetes/kubernetes/releases?per_page=100"
 auth_header=""
 if [ -n "$ASDF_GITHUB_TOKEN" ]; then
   auth_header="-H \"Authorization: token $ASDF_GITHUB_TOKEN\""
