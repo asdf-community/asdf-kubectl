@@ -14,7 +14,6 @@ fail() {
 }
 
 curl_opts=(-fsSL)
-
 releases_path=https://api.github.com/repos/kubernetes/kubernetes/releases
 curl_cmd="$(command -vp curl)"
 cmd="${curl_cmd} -fsS"
