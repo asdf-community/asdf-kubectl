@@ -31,7 +31,7 @@ get_arch() {
 
 get_cpu() {
   local machine_hardware_name
-  machine_hardware_name="$(uname -m)"
+  machine_hardware_name=${ASDF_KUBECTL_OVERWRITE_ARCH:-"$(uname -m)"}
 
   case "$machine_hardware_name" in
     'x86_64') local cpu_type="amd64";;
