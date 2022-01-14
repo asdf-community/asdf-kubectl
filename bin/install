@@ -47,7 +47,6 @@ get_cpu() {
 get_download_url() {
   local version="$1"
   local platform="$(get_arch)"
-  #echo "https://storage.googleapis.com/kubernetes-release/release/v${version}/bin/${platform}/$(get_cpu)/kubectl"
   echo "https://dl.k8s.io/release/v${version}/bin/${platform}/$(get_cpu)/kubectl"
 }
 
