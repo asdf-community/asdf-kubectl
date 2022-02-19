@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+curl -L -s https://dl.k8s.io/release/stable.txt | cut -c 2- -
