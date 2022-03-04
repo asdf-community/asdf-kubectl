@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-query="$1"
+query="${1:-}"
 if [ -z "$query" ]; then
   # No filtering needed, select latest stable
   curl -L -s https://dl.k8s.io/release/stable.txt | cut -c 2- -
