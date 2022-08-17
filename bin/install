@@ -21,6 +21,7 @@ install_kubectl() {
   if curl -L -sf "$download_url" -o "$bin_path"; then
     chmod +x $bin_path
   else
+    echo "Failed to download kubectl from ${download_url}. Does the version exist and is available in the requested $(get_cpu) architecture?"
     exit 1
   fi
 }
