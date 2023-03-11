@@ -9,10 +9,14 @@ function sort_versions() {
 }
 
 list_all_versions() {
-  git ls-remote --tags --refs https://github.com/kubernetes/kubernetes.git |
+  git ls-remote --tags --refs https://github.com/bitnami-labs/sealed-secrets.git |
+    # skip helm tags
+    grep -v helm |
+    # skip wrong tags in the repo
+    grep -v sealed-secrets |
     grep -o 'refs/tags/.*' |
     cut -d/ -f3- |
-    sed 's/^v//'
+    sed 's/^v//' | sort_versions
 }
 
 list_all_versions | sort_versions | xargs echo
