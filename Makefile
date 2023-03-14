@@ -1,4 +1,4 @@
-SRCFILES = $(shell git ls-files "bin/**" "**/*.bats")
+SRCFILES = $(shell git ls-files "bin/**")
 SHFMT_BASE_FLAGS = -s -i 2 -ci
 
 format:
