@@ -4,22 +4,23 @@ set -e
 set -o pipefail
 
 ASDF_INSTALL_TYPE=${ASDF_INSTALL_TYPE:-version  }
-[ -n "$ASDF_INSTALL_VERSION" ] || (>&2 echo 'Missing ASDF_INSTALL_VERSION' && exit 1)
-[ -n "$ASDF_INSTALL_PATH" ] || (>&2 echo 'Missing ASDF_INSTALL_PATH' && exit 1)
+[ -n "$ASDF_INSTALL_VERSION" ] || (echo >&2 'Missing ASDF_INSTALL_VERSION' && exit 1)
+[ -n "$ASDF_INSTALL_PATH" ] || (echo >&2 'Missing ASDF_INSTALL_PATH' && exit 1)
 
 install_kubectl() {
-  local install_type=$1
+  # local install_type=$1
   local version=$2
   local install_path=$3
   local bin_install_path="$install_path/bin"
-  local download_url="$(get_download_url $version)"
+  local download_url
+  download_url="$(get_download_url "$version")"
 
   mkdir -p "${bin_install_path}"
 
   local bin_path="${bin_install_path}/kubectl"
   echo "Downloading kubectl from ${download_url}"
   if curl -L -sf "$download_url" -o "$bin_path"; then
-    chmod +x $bin_path
+    chmod +x "$bin_path"
   else
     echo "Failed to download kubectl from ${download_url}. Does the version exist and is available in the requested $(get_cpu) architecture?"
     exit 1
@@ -35,11 +36,11 @@ get_cpu() {
   machine_hardware_name=${ASDF_KUBECTL_OVERWRITE_ARCH:-"$(uname -m)"}
 
   case "$machine_hardware_name" in
-    'x86_64') local cpu_type="amd64";;
-    'powerpc64le' | 'ppc64le') local cpu_type="ppc64le";;    
-    'aarch64') local cpu_type="arm64";;
-    'armv7l') local cpu_type="arm";;
-    *) local cpu_type="$machine_hardware_name";;
+    'x86_64') local cpu_type="amd64" ;;
+    'powerpc64le' | 'ppc64le') local cpu_type="ppc64le" ;;
+    'aarch64') local cpu_type="arm64" ;;
+    'armv7l') local cpu_type="arm" ;;
+    *) local cpu_type="$machine_hardware_name" ;;
   esac
 
   echo "$cpu_type"
@@ -47,8 +48,11 @@ get_cpu() {
 
 get_download_url() {
   local version="$1"
-  local platform="$(get_arch)"
-  echo "https://dl.k8s.io/release/v${version}/bin/${platform}/$(get_cpu)/kubectl"
+  local platform
+  platform="$(get_arch)"
+  local cpu
+  cpu=$(get_cpu)
+  echo "https://dl.k8s.io/release/v${version}/bin/${platform}/${cpu}/kubectl"
 }
 
-install_kubectl $ASDF_INSTALL_TYPE $ASDF_INSTALL_VERSION $ASDF_INSTALL_PATH
+install_kubectl "$ASDF_INSTALL_TYPE" "$ASDF_INSTALL_VERSION" "$ASDF_INSTALL_PATH"
