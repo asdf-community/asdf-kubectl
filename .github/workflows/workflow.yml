@@ -1,0 +1,25 @@
+name: Test Plugin
+
+on:
+  pull_request:
+  push:
+  schedule:
+    - cron: 0 1 * * MON
+
+jobs:
+  test-plugin:
+    name: Test Plugin
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - macos-latest
+          - ubuntu-latest
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: asdf-vm/actions/plugin-test@v1
+        with:
+          command: kubectl version --client=true
