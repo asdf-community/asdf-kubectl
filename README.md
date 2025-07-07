@@ -26,6 +26,6 @@ Downloading kubectl from https://storage.googleapis.com/kubernetes-release/relea
 ### With `ASDF_KUBECTL_OVERWRITE_ARCH`:
 
 ```
-% ASDF_KUBECTL_OVERWRITE_ARCH=amd64 asdf install 1.33.2
+% ASDF_KUBECTL_OVERWRITE_ARCH=amd64 asdf install kubectl 1.33.2
 Downloading kubectl from https://storage.googleapis.com/kubernetes-release/release/v1.33.2/bin/darwin/amd64/kubectl
 ```
