@@ -5,7 +5,7 @@ Kubectl plugin for [asdf](https://github.com/asdf-vm/asdf) version manager
 ## Install
 
 ```
-asdf plugin-add kubectl https://github.com/asdf-community/asdf-kubectl.git
+asdf plugin add kubectl https://github.com/asdf-community/asdf-kubectl.git
 ```
 
 ## Use
@@ -19,13 +19,13 @@ The `ASDF_KUBECTL_OVERWRITE_ARCH` variable can be used to override the architect
 ### Without `ASDF_KUBECTL_OVERWRITE_ARCH`:
 
 ```
-% asdf install kubectl 1.18.17
-Downloading kubectl from https://storage.googleapis.com/kubernetes-release/release/v1.18.17/bin/darwin/arm64/kubectl
+% asdf install kubectl 1.33.2
+Downloading kubectl from https://storage.googleapis.com/kubernetes-release/release/v1.33.2/bin/darwin/arm64/kubectl
 ```
 
 ### With `ASDF_KUBECTL_OVERWRITE_ARCH`:
 
 ```
-% ASDF_KUBECTL_OVERWRITE_ARCH=amd64 asdf install kubectl 1.18.17
-Downloading kubectl from https://storage.googleapis.com/kubernetes-release/release/v1.18.17/bin/darwin/amd64/kubectl
+% ASDF_KUBECTL_OVERWRITE_ARCH=amd64 asdf install kubectl 1.33.2
+Downloading kubectl from https://storage.googleapis.com/kubernetes-release/release/v1.33.2/bin/darwin/amd64/kubectl
 ```
